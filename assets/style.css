@@ -27,3 +27,8 @@
 li:hover {
     background-color: rgb(252, 252, 252);
 }
+
+img {
+    width: 30px;
+    height: 30px;
+}
