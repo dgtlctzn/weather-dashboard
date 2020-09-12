@@ -8,7 +8,7 @@
   <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title></title>
+    <title>Weather Dashboard</title>
     <meta name="description" content="" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link
@@ -20,6 +20,62 @@
     <link rel="stylesheet" href="assets/style.css" />
   </head>
   <body>
+    <nav class="navbar navbar-dark bg-dark">
+        <span class="navbar-brand mb-0 h1">Weather Dashboard</span>
+    </nav>
+    <div class="container">
+        <div class="row">
+            <!-- sidebar -->
+            <div class="col-sm-4 side-bar">
+                <!-- search and cities go here -->
+                <h3>Search For A City:</h3>
+                <form class="form-inline my-2 my-lg-0">
+                    <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                </form>
+                <ul class="list-group">
+                    <li class="list-group-item">Cras justo odio</li>
+                    <li class="list-group-item">Dapibus ac facilisis in</li>
+                    <li class="list-group-item">Morbi leo risus</li>
+                    <li class="list-group-item">Porta ac consectetur ac</li>
+                    <li class="list-group-item">Vestibulum at eros</li>
+                  </ul>
+            </div>
+            <!-- main weather -->
+            <div class="col-sm-8">
+                <!-- current weather -->
+                <div class="row">
+                    <div id="current-stats" class="col-sm-12">
+                        <!-- current weather stats -->
+                        <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Omnis neque veniam reiciendis, facere nisi repellendus debitis, iusto accusantium, totam aliquam porro deserunt commodi ratione? Iste pariatur ratione voluptate tempore sed consectetur, at iure. Quaerat eveniet ex dolore deserunt excepturi, culpa quisquam quo reprehenderit eaque voluptate deleniti sapiente? Quam ab earum asperiores possimus facilis fugit ea impedit doloribus atque, tempora at esse labore voluptatem porro mollitia dolor rem architecto maxime adipisci ipsum cumque minima sequi? Qui fugit quibusdam hic voluptatibus facilis sed, quas rem, cupiditate, animi esse delectus! Aut sunt doloribus ipsa repellendus hic veniam porro, iste laudantium facere illum maxime!</p>
+                    </div>
+                </div>
+                <!-- forecast -->
+                <div class="row"">
+                    <div class="col-sm-12">
+                        <!-- weather blocks -->
+                        <h2>Five Day Forecast</h2>
+                        <div class="weather-block">
+
+                        </div>
+                        <div class="weather-block">
+
+                        </div>
+                        <div class="weather-block">
+
+                        </div>
+                        <div class="weather-block">
+
+                        </div>
+                        <div class="weather-block">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="assets/index.js"></script>
   </body>
 </html>
