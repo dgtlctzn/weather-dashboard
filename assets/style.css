@@ -23,3 +23,7 @@
     background-color: skyblue;
     border-radius: 10px;
 }
+
+li:hover {
+    background-color: rgb(252, 252, 252);
+}
