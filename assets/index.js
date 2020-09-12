@@ -14,16 +14,20 @@ function storeCurrentWeather(city) {
 
     $.ajax(request).then(function(response) {
 
-        console.log(response);
-        console.log(response.name);
-        console.log(response.main.temp);
-        console.log(response.main.humidity);
-        console.log(response.wind.speed);
+        cityStats = {
+            name: response.name,
+            temperature: response.main.temp + " °F",
+            humidity: response.main.humidity + "%",
+            windSpeed: response.wind.speed + " MPH",
+            date: currentDate, 
+        }
 
         if (storedLocal) {
-
+            storedLocal.push(cityStats);
+            localStorage.setItem("storedCities", JSON.stringify(storedLocal));
         } else {
-            
+            storedCities.push(cityStats);
+            localStorage.setItem("storedCities", JSON.stringify(storedCities));
         }
     });
 }
@@ -34,6 +38,6 @@ $("#search-button").on("click", function(event) {
     var cityInput = $("#search-input").val();
     var listEl = $("<li>").addClass("list-group-item").text(cityInput);
     cityList.append(listEl);
-})
 
-storeCurrentWeather("Atlanta")
+    storeCurrentWeather(cityInput);
+})
