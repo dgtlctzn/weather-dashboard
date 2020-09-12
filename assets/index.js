@@ -1,9 +1,10 @@
 var cityList = $(".list-group");
-var storedLocal = JSON.parse(localStorage.getItem("storedCities"));
-var storedCities = [];
+// var storedLocal = JSON.parse(localStorage.getItem("storedCities"));
+// var storedCities = [];
 var currentDate = moment().format("M/D/YY");
 
-function storeCurrentWeather(city) {
+function storeWeather(city) {
+
     currentWeatherURL = "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&units=imperial&appid=f2f448fdff7880f3d298bdf08e187544"
 
     requestCurrent = {
@@ -22,7 +23,7 @@ function storeCurrentWeather(city) {
             date: moment().utc(response.dt).format("M/D/YY"), 
         }
 
-        // console.log(response);
+        addToStorage("currentValues", currentStats);
     });
 
     futureWeatherURL = "https://api.openweathermap.org/data/2.5/forecast?q=" + city + "&units=imperial&appid=f2f448fdff7880f3d298bdf08e187544"
@@ -48,25 +49,25 @@ function storeCurrentWeather(city) {
                     humidity: response.list[i + 4].main.humidity,
                     weather: response.list[i + 4].weather[0].main,
                 };
-                // console.log(response.list[i + 4]);
-                // console.log(response.list[i + 4].main.temp);
-                // console.log(response.list[i + 4].main.humidity);
-                // console.log(response.list[i + 4].weather[0].main);
+
                 start = start.add(1, "days");
                 futureStats.push(futureObject);
             }
         }
-        console.log(futureStats);
+        addToStorage("futureValues", futureStats);
     });
+}
 
+function addToStorage(key, value) {
+    var storedLocal = JSON.parse(localStorage.getItem(key));
     if (storedLocal) {
-        storedLocal.push(cityStats);
-        localStorage.setItem("storedCities", JSON.stringify(storedLocal));
+        storedLocal.push(value);
+        localStorage.setItem(key, JSON.stringify(storedLocal));
     } else {
-        storedCities.push(cityStats);
-        localStorage.setItem("storedCities", JSON.stringify(storedCities));
+        var storedLocal = [];
+        storedLocal.push(value);
+        localStorage.setItem(key, JSON.stringify(storedLocal));
     }
-
 }
 
 $("#search-button").on("click", function(event) {
@@ -76,5 +77,5 @@ $("#search-button").on("click", function(event) {
     var listEl = $("<li>").addClass("list-group-item").text(cityInput);
     cityList.append(listEl);
 
-    storeCurrentWeather(cityInput);
+    storeWeather(cityInput);
 })
