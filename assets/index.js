@@ -12,18 +12,30 @@ function storeWeather(city) {
         method: "GET",
     }
 
-    $.ajax(requestCurrent).then(function(response) {
+    $.ajax(requestCurrent).then(function(responseOne) {
 
-        var currentStats = {
-            name: response.name,
-            weather: response.weather[0].main,
-            temperature: response.main.temp + " °F",
-            humidity: response.main.humidity + "%",
-            windSpeed: response.wind.speed + " MPH",
-            date: moment().utc(response.dt).format("M/D/YY"), 
+        var lat = responseOne.coord.lat;
+        var long = responseOne.coord.lon;
+
+        uviURL = "https://api.openweathermap.org/data/2.5/onecall?lat=" + lat + "&lon=" + long + "&%20&exclude=daily,hourly,minutely&appid=f2f448fdff7880f3d298bdf08e187544"
+
+        requestUVI = {
+            url: uviURL,
+            method: "GET",
         }
 
-        addToStorage("currentValues", currentStats);
+        $.ajax(requestUVI).then(function(responseTwo) {
+            var currentStats = {
+                name: responseOne.name,
+                weather: responseOne.weather[0].main,
+                temperature: responseOne.main.temp + " °F",
+                humidity: responseOne.main.humidity + "%",
+                windSpeed: responseOne.wind.speed + " MPH",
+                uvIndex: responseTwo.current.uvi,
+                date: moment().utc(responseOne.dt).format("M/D/YY"), 
+            }
+            addToStorage("currentValues", currentStats);
+        });
     });
 
     futureWeatherURL = "https://api.openweathermap.org/data/2.5/forecast?q=" + city + "&units=imperial&appid=f2f448fdff7880f3d298bdf08e187544"
@@ -39,9 +51,9 @@ function storeWeather(city) {
         // console.log(response);
 
         start = moment(response.list[0].dt_txt);
+        start = start.add(12, "hours");
         for (var i = 0; i < response.list.length; i++) {
             if (start.format("M/D/YY") === moment(response.list[i].dt_txt).format("M/D/YY")) {
-                //adding 4 to index gets weather at noon
                 futureObject = {
                     date: moment(response.list[i + 4].dt_txt).format("M/D/YY"),
                     name: response.city.name,
