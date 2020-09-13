@@ -53,3 +53,7 @@ img {
     padding: 5px;
     border-radius: 5px;
 }
+
+.list-group {
+    margin-top: 10px;
+}
