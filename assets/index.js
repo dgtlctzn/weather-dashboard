@@ -155,7 +155,12 @@ function displayCityList() {
 }
 
 $(document).ready(function () {
+    
   displayCityList();
+  var storedLocal = JSON.parse(localStorage.getItem("currentValues"));
+  if (storedLocal) {
+      displayCurrentWeather(storedLocal[storedLocal.length - 1].name);
+  }
 
   $("#search-button").on("click", function (event) {
     event.preventDefault();
