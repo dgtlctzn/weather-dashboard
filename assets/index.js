@@ -41,6 +41,7 @@ function storeWeather(city) {
         date: moment().utc(responseOne.dt).format("M/D/YY"),
       };
       addToStorage("currentValues", currentStats);
+      displayCityList();
       displayCurrentWeather(city);
     });
   });
@@ -96,6 +97,7 @@ function addToStorage(key, value) {
 
 function displayCurrentWeather(city) {
   var storedLocal = JSON.parse(localStorage.getItem("currentValues"));
+  console.log(storedLocal);
   for (var i = 0; i < storedLocal.length; i++) {
     if (storedLocal[i].name.toLowerCase() === city.toLowerCase()) {
       console.log("yep");
@@ -142,27 +144,32 @@ function displayCurrentWeather(city) {
 }
 
 function displayCityList() {
-    var storedLocal = JSON.parse(localStorage.getItem("currentValues"));
-    if (storedLocal) {
-        cityList.empty();
-        for (var i = 0; i < storedLocal.length; i++) {
-            var listEl = $("<li>").addClass("list-group-item").text(storedLocal[i].name);
-            cityList.append(listEl);
-        }
+  var storedLocal = JSON.parse(localStorage.getItem("currentValues"));
+  if (storedLocal) {
+    cityList.empty();
+    for (var i = 0; i < storedLocal.length; i++) {
+      var listEl = $("<li>").addClass("list-group-item").text(storedLocal[i].name);
+      cityList.append(listEl);
     }
+  }
 }
 
-$(document).ready(function() {
+$(document).ready(function () {
+  displayCityList();
 
-    displayCityList();
+  $("#search-button").on("click", function (event) {
+    event.preventDefault();
 
-    $("#search-button").on("click", function (event) {
-        event.preventDefault();
-      
-        var cityInput = $("#search-input").val();
-        var listEl = $("<li>").addClass("list-group-item").text(cityInput);
-        cityList.append(listEl);
-      
-        storeWeather(cityInput);
-      });
-})
+    var cityInput = $("#search-input").val();
+    var listEl = $("<li>").addClass("list-group-item").text(cityInput);
+    cityList.append(listEl);
+
+    storeWeather(cityInput);
+  });
+
+  $(".list-group").on("click", ".list-group-item", function () {
+    var citySelection = $(this).text();
+    console.log(citySelection);
+    displayCurrentWeather(citySelection);
+  });
+});
