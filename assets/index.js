@@ -35,6 +35,7 @@ function storeWeather(city) {
                 date: moment().utc(responseOne.dt).format("M/D/YY"), 
             }
             addToStorage("currentValues", currentStats);
+            displayCurrentWeather(city);
         });
     });
 
@@ -79,6 +80,20 @@ function addToStorage(key, value) {
         var storedLocal = [];
         storedLocal.push(value);
         localStorage.setItem(key, JSON.stringify(storedLocal));
+    }
+}
+
+function displayCurrentWeather(city) {
+    var storedLocal = JSON.parse(localStorage.getItem("currentValues"));
+    for (var i = 0; i < storedLocal.length; i++) {
+        if (storedLocal[i].name.toLowerCase() === city.toLowerCase()) {
+            console.log("yep");
+            $("#city-date").text(storedLocal[i].name + " (" + storedLocal[i].date + ")");
+            $("#temp").text("Temperature: " + storedLocal[i].temperature);
+            $("#humid").text("Humidity: " + storedLocal[i].humidity);
+            $("#wind").text("Wind Speed: " + storedLocal[i].windSpeed);
+            $("#uvIndex").text("UV Index: " + storedLocal[i].uvIndex);
+        }
     }
 }
 
