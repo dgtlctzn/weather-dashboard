@@ -32,3 +32,24 @@ img {
     width: 30px;
     height: 30px;
 }
+
+.uv-severe {
+    background: red;
+    color: white;
+    padding: 5px;
+    border-radius: 5px;
+}
+
+.uv-moderate {
+    background: rgb(247, 165, 13);
+    color: white;
+    padding: 5px;
+    border-radius: 5px;
+}
+
+.uv-favorable {
+    background: green;
+    color: white;
+    padding: 5px;
+    border-radius: 5px;
+}

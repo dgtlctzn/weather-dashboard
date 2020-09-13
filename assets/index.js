@@ -92,7 +92,17 @@ function displayCurrentWeather(city) {
             $("#temp").text("Temperature: " + storedLocal[i].temperature);
             $("#humid").text("Humidity: " + storedLocal[i].humidity);
             $("#wind").text("Wind Speed: " + storedLocal[i].windSpeed);
-            $("#uvIndex").text("UV Index: " + storedLocal[i].uvIndex);
+
+            var uvSpan = $("<span>").text(storedLocal[i].uvIndex)
+            if (storedLocal[i].uvIndex > 7) {
+                uvSpan.addClass("uv-severe");
+            } else if (storedLocal[i].uvIndex < 3) {
+                uvSpan.addClass("uv-favorable");
+            } else {
+                uvSpan.addClass("uv-moderate");
+            }
+
+            $("#uvIndex").empty().text("UV Index: ").append(uvSpan);
         }
     }
 }
