@@ -88,10 +88,27 @@ function displayCurrentWeather(city) {
     for (var i = 0; i < storedLocal.length; i++) {
         if (storedLocal[i].name.toLowerCase() === city.toLowerCase()) {
             console.log("yep");
-            $("#city-date").text(storedLocal[i].name + " (" + storedLocal[i].date + ")");
+            $("#city-date").text(storedLocal[i].name + " (" + storedLocal[i].date + ") ");
             $("#temp").text("Temperature: " + storedLocal[i].temperature);
             $("#humid").text("Humidity: " + storedLocal[i].humidity);
             $("#wind").text("Wind Speed: " + storedLocal[i].windSpeed);
+
+            var currentIMG = $("<img>");
+            if (storedLocal[i].weather === "Clear") {
+                currentIMG.attr("src", "assets/images/sun.png");
+                currentIMG.attr("alt", "Sunny");
+            } else if (storedLocal[i].weather === "Clouds") {
+                currentIMG.attr("src", "assets/images/cloud.png");
+                currentIMG.attr("alt", "Cloudy");
+            } else if (storedLocal[i].weather === "Rain") {
+                currentIMG.attr("src", "assets/images/water.png");
+                currentIMG.attr("alt", "Rainy");
+            } else if (storedLocal[i].weather === "Smoke" || storedLocal[i].weather === "Haze" || storedLocal[i].weather === "Fog") {
+                currentIMG.attr("src", "assets/images/fog.png");
+                currentIMG.attr("alt", "Foggy");
+            }
+
+            $("#city-date").append(currentIMG);
 
             var uvSpan = $("<span>").text(storedLocal[i].uvIndex)
             if (storedLocal[i].uvIndex > 7) {
