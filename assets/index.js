@@ -52,6 +52,7 @@ function storeWeather(city) {
           date: moment.unix(responseTwo.daily[i].dt).format("M/D/YY"),
           weather: responseTwo.daily[i].weather[0].main,
           temperature: responseTwo.daily[i].temp.day,
+          humidity: responseTwo.daily[i].humidity,
         }
 
         weatherStats.futureWeather.push(fiveDayForecast)
@@ -62,41 +63,6 @@ function storeWeather(city) {
       displayCurrentWeather(city);
     });
   });
-
-  // futureWeatherURL =
-  //   "https://api.openweathermap.org/data/2.5/forecast?q=" +
-  //   city +
-  //   "&units=imperial&appid=f2f448fdff7880f3d298bdf08e187544";
-
-  // requestFuture = {
-  //   url: futureWeatherURL,
-  //   method: "GET",
-  // };
-
-  // $.ajax(requestFuture).then(function (response) {
-  //   var futureStats = [];
-
-  //   start = moment(response.list[0].dt_txt);
-  //   start = start.add(12, "hours");
-  //   for (var i = 0; i < response.list.length; i++) {
-  //     if (
-  //       start.format("M/D/YY") ===
-  //       moment(response.list[i].dt_txt).format("M/D/YY")
-  //     ) {
-  //       futureObject = {
-  //         date: moment(response.list[i + 4].dt_txt).format("M/D/YY"),
-  //         name: response.city.name,
-  //         temperature: response.list[i + 4].main.temp,
-  //         humidity: response.list[i + 4].main.humidity,
-  //         weather: response.list[i + 4].weather[0].main,
-  //       };
-
-  //       start = start.add(1, "days");
-  //       futureStats.push(futureObject);
-  //     }
-  //   }
-  //   addToStorage("futureValues", futureStats);
-  // });
 }
 
 function addToStorage(key, value) {
@@ -114,37 +80,33 @@ function addToStorage(key, value) {
 function displayCurrentWeather(city) {
   var storedLocal = JSON.parse(localStorage.getItem("weatherValues"));
   for (var i = 0; i < storedLocal.length; i++) {
-    if (storedLocal[i].name.toLowerCase() === city.toLowerCase()) {
+    if (storedLocal[i].cityName.toLowerCase() === city.toLowerCase()) {
       $("#city-date").text(
-        storedLocal[i].name + " (" + storedLocal[i].currentWeather.date + ") "
+        storedLocal[i].cityName + " (" + storedLocal[i].currentWeather.date + ") "
       );
       $("#temp").text("Temperature: " + storedLocal[i].currentWeather.temperature);
       $("#humid").text("Humidity: " + storedLocal[i].currentWeather.humidity);
       $("#wind").text("Wind Speed: " + storedLocal[i].currentWeather.windSpeed);
 
-      var currentIMG = $("<img>");
+      var weatherIcon = $("<i>")
       if (storedLocal[i].currentWeather.weather === "Clear") {
-        currentIMG.attr("src", "assets/images/sun.png");
-        currentIMG.attr("alt", "Sunny");
+        weatherIcon.addClass("fas fa-sun");
       } else if (storedLocal[i].currentWeather.weather === "Clouds") {
-        currentIMG.attr("src", "assets/images/cloud.png");
-        currentIMG.attr("alt", "Cloudy");
+        weatherIcon.addClass("fas fa-cloud");
       } else if (storedLocal[i].currentWeather.weather === "Rain") {
-        currentIMG.attr("src", "assets/images/water.png");
-        currentIMG.attr("alt", "Rainy");
+        weatherIcon.addClass("fas fa-cloud-rain");
       } else if (
         storedLocal[i].currentWeather.weather === "Smoke" ||
         storedLocal[i].currentWeather.weather === "Haze" ||
-        storedLocal[i].currentWeather.weather === "Fog"
+        storedLocal[i].currentWeather.weather === "Fog" ||
+        storedLocal[i].currentWeather.weather === "Mist"
       ) {
-        currentIMG.attr("src", "assets/images/fog.png");
-        currentIMG.attr("alt", "Foggy");
+        weatherIcon.addClass("fas fa-smog")
       } else if (storedLocal[i].currentWeather.weather === "Thunderstorm") {
-        currentIMG.attr("src", "assets/images/thunderstorm.png");
-        currentIMG.attr("alt", "Thunderstorms");
+        weatherIcon.addClass("fas fa-bolt")
       }
 
-      $("#city-date").append(currentIMG);
+      $("#city-date").append(weatherIcon);
 
       var uvSpan = $("<span>").text(storedLocal[i].currentWeather.uvIndex);
       if (storedLocal[i].currentWeather.uvIndex > 7) {
@@ -167,7 +129,7 @@ function displayCityList() {
     for (var i = 0; i < storedLocal.length; i++) {
       var listEl = $("<li>")
         .addClass("list-group-item")
-        .text(storedLocal[i].name);
+        .text(storedLocal[i].cityName);
       cityList.append(listEl);
     }
   }
@@ -177,7 +139,7 @@ $(document).ready(function () {
   displayCityList();
   var storedLocal = JSON.parse(localStorage.getItem("weatherValues"));
   if (storedLocal) {
-    displayCurrentWeather(storedLocal[storedLocal.length - 1].name);
+    displayCurrentWeather(storedLocal[storedLocal.length - 1].cityName);
   }
 
   $("#city-search").on("submit", function (event) {
