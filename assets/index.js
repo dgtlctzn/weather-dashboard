@@ -118,10 +118,12 @@ function displayCityList() {
   if (storedLocal) {
     cityList.empty();
     for (var i = 0; i < storedLocal.length; i++) {
-      var listEl = $("<li>")
-        .addClass("list-group-item")
-        .text(storedLocal[i].cityName);
-      cityList.append(listEl);
+      if (storedLocal[i].currentWeather.date === currentDate) {
+        var listEl = $("<li>")
+          .addClass("list-group-item")
+          .text(storedLocal[i].cityName);
+        cityList.append(listEl);
+      }
     }
   }
 }
@@ -133,7 +135,6 @@ function displayFutureWeather(city) {
   for (var i = 0; i < storedLocal.length; i++) {
     if (storedLocal[i].cityName.toLowerCase() === city.toLowerCase()) {
       for (var c = 0; c < storedLocal[i].futureWeather.length; c++) {
-
         var weatherBlock = $("<div>").addClass("weather-block");
 
         var futureDate = $("<h5>").text(storedLocal[i].futureWeather[c].date);
@@ -145,7 +146,7 @@ function displayFutureWeather(city) {
           "Humidity: " + storedLocal[i].futureWeather[c].humidity
         );
 
-        displayWeatherIcon(futureIcon, storedLocal[i].futureWeather[c].weather)
+        displayWeatherIcon(futureIcon, storedLocal[i].futureWeather[c].weather);
 
         weatherBlock.append(futureDate, futureIcon, futureTemp, futureHumid);
         fiveDayEl.append(weatherBlock);
@@ -170,6 +171,8 @@ function displayWeatherIcon(icon, weatherEvent) {
     icon.addClass("fas fa-smog");
   } else if (weatherEvent === "Thunderstorm") {
     icon.addClass("fas fa-bolt");
+  } else if (weatherEvent === "Snow") {
+    icon.addClass("fas fa-snowflake");
   }
 }
 
