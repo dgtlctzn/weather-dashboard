@@ -50,8 +50,8 @@ function storeWeather(city) {
         fiveDayForecast = {
           date: moment.unix(responseTwo.daily[i].dt).format("M/D/YY"),
           weather: responseTwo.daily[i].weather[0].main,
-          temperature: responseTwo.daily[i].temp.day,
-          humidity: responseTwo.daily[i].humidity,
+          temperature: responseTwo.daily[i].temp.day + " °F",
+          humidity: responseTwo.daily[i].humidity + "%",
         };
 
         weatherStats.futureWeather.push(fiveDayForecast);
@@ -96,22 +96,6 @@ function displayCurrentWeather(city) {
       var weatherIcon = $("<i>");
 
       displayWeatherIcon(weatherIcon, storedLocal[i].currentWeather.weather);
-      // if (storedLocal[i].currentWeather.weather === "Clear") {
-      //   weatherIcon.addClass("fas fa-sun");
-      // } else if (storedLocal[i].currentWeather.weather === "Clouds") {
-      //   weatherIcon.addClass("fas fa-cloud");
-      // } else if (storedLocal[i].currentWeather.weather === "Rain") {
-      //   weatherIcon.addClass("fas fa-cloud-rain");
-      // } else if (
-      //   storedLocal[i].currentWeather.weather === "Smoke" ||
-      //   storedLocal[i].currentWeather.weather === "Haze" ||
-      //   storedLocal[i].currentWeather.weather === "Fog" ||
-      //   storedLocal[i].currentWeather.weather === "Mist"
-      // ) {
-      //   weatherIcon.addClass("fas fa-smog")
-      // } else if (storedLocal[i].currentWeather.weather === "Thunderstorm") {
-      //   weatherIcon.addClass("fas fa-bolt")
-      // }
 
       $("#city-date").append(weatherIcon);
 
@@ -149,21 +133,20 @@ function displayFutureWeather(city) {
   for (var i = 0; i < storedLocal.length; i++) {
     if (storedLocal[i].cityName.toLowerCase() === city.toLowerCase()) {
       for (var c = 0; c < storedLocal[i].futureWeather.length; c++) {
-        // var futureIcon = storedLocal[i].futureWeather[c].weather;
 
         var weatherBlock = $("<div>").addClass("weather-block");
 
-        var futureDate = $("<h4>").text(storedLocal[i].futureWeather[c].date);
+        var futureDate = $("<h5>").text(storedLocal[i].futureWeather[c].date);
         var futureIcon = $("<i>");
-        var futureTemp = $("<h4>").text(
-          storedLocal[i].futureWeather[c].temperature
+        var futureTemp = $("<p>").text(
+          "Temp: " + storedLocal[i].futureWeather[c].temperature
         );
-        var futureHumid = $("<h4>").text(
-          storedLocal[i].futureWeather[c].humidity
+        var futureHumid = $("<p>").text(
+          "Humidity: " + storedLocal[i].futureWeather[c].humidity
         );
 
         displayWeatherIcon(futureIcon, storedLocal[i].futureWeather[c].weather)
-        
+
         weatherBlock.append(futureDate, futureIcon, futureTemp, futureHumid);
         fiveDayEl.append(weatherBlock);
       }

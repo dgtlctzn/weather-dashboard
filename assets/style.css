@@ -2,14 +2,31 @@
     padding: 20px;
 }
 
+nav {
+    background-color: rgb(34, 34, 34);
+    height: 70px;
+    color: white;
+    text-align: center;
+    font-size: 40px;
+}
+
 /* #search-input {
     width: 70%;
+} */
+
+h4 {
+    margin-left: 10px;
 }
 
 #search-button {
-    width: auto;
-    float: right;
-} */
+    color: rgb(32, 42, 177);
+    border-color: rgb(32, 42, 177);
+}
+
+#search-button:hover {
+    background-color: rgb(32, 42, 177);
+    color: white;
+}
 
 .side-bar {
     background-color: rgb(247, 247, 247);
@@ -26,11 +43,14 @@
 
 .weather-block {
     margin: 10px;
-    width: 100px;
-    height: 120px;
+    width: 120px;
+    height: 150px;
+    padding: 10px;
     float: left;
-    background-color: skyblue;
+    background-color: rgb(32, 42, 177);
     border-radius: 10px;
+    font-size: 12px;
+    color: white;
 }
 
 li:hover {
@@ -38,9 +58,9 @@ li:hover {
     cursor: pointer;
 }
 
-img {
-    width: 30px;
-    height: 30px;
+i {
+    font-size: 25px;
+    padding: 10px;
 }
 
 .uv-severe {
@@ -66,4 +86,10 @@ img {
 
 .list-group {
     margin-top: 10px;
+}
+
+@media screen and (max-width: 400px) {
+    .weather-block {
+        margin-right: 100px;
+    }
 }
