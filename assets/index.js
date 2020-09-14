@@ -33,16 +33,15 @@ function storeWeather(city) {
     };
 
     $.ajax(requestWeather).then(function (responseTwo) {
-
       var weatherStats = {
         cityName: currentCity,
         currentWeather: {
-        date: moment().utc(responseTwo.current.dt).format("M/D/YY"),
-        weather: responseTwo.current.weather[0].main,
-        temperature: responseTwo.current.temp + " °F",
-        humidity: responseTwo.current.humidity + "%",
-        windSpeed: responseTwo.current.wind_speed + " MPH",
-        uvIndex: responseTwo.current.uvi,
+          date: moment().utc(responseTwo.current.dt).format("M/D/YY"),
+          weather: responseTwo.current.weather[0].main,
+          temperature: responseTwo.current.temp + " °F",
+          humidity: responseTwo.current.humidity + "%",
+          windSpeed: responseTwo.current.wind_speed + " MPH",
+          uvIndex: responseTwo.current.uvi,
         },
         futureWeather: [],
       };
@@ -53,14 +52,15 @@ function storeWeather(city) {
           weather: responseTwo.daily[i].weather[0].main,
           temperature: responseTwo.daily[i].temp.day,
           humidity: responseTwo.daily[i].humidity,
-        }
+        };
 
-        weatherStats.futureWeather.push(fiveDayForecast)
+        weatherStats.futureWeather.push(fiveDayForecast);
       }
 
       addToStorage("weatherValues", weatherStats);
       displayCityList();
       displayCurrentWeather(city);
+      displayFutureWeather(city);
     });
   });
 }
@@ -82,29 +82,36 @@ function displayCurrentWeather(city) {
   for (var i = 0; i < storedLocal.length; i++) {
     if (storedLocal[i].cityName.toLowerCase() === city.toLowerCase()) {
       $("#city-date").text(
-        storedLocal[i].cityName + " (" + storedLocal[i].currentWeather.date + ") "
+        storedLocal[i].cityName +
+          " (" +
+          storedLocal[i].currentWeather.date +
+          ") "
       );
-      $("#temp").text("Temperature: " + storedLocal[i].currentWeather.temperature);
+      $("#temp").text(
+        "Temperature: " + storedLocal[i].currentWeather.temperature
+      );
       $("#humid").text("Humidity: " + storedLocal[i].currentWeather.humidity);
       $("#wind").text("Wind Speed: " + storedLocal[i].currentWeather.windSpeed);
 
-      var weatherIcon = $("<i>")
-      if (storedLocal[i].currentWeather.weather === "Clear") {
-        weatherIcon.addClass("fas fa-sun");
-      } else if (storedLocal[i].currentWeather.weather === "Clouds") {
-        weatherIcon.addClass("fas fa-cloud");
-      } else if (storedLocal[i].currentWeather.weather === "Rain") {
-        weatherIcon.addClass("fas fa-cloud-rain");
-      } else if (
-        storedLocal[i].currentWeather.weather === "Smoke" ||
-        storedLocal[i].currentWeather.weather === "Haze" ||
-        storedLocal[i].currentWeather.weather === "Fog" ||
-        storedLocal[i].currentWeather.weather === "Mist"
-      ) {
-        weatherIcon.addClass("fas fa-smog")
-      } else if (storedLocal[i].currentWeather.weather === "Thunderstorm") {
-        weatherIcon.addClass("fas fa-bolt")
-      }
+      var weatherIcon = $("<i>");
+
+      displayWeatherIcon(weatherIcon, storedLocal[i].currentWeather.weather);
+      // if (storedLocal[i].currentWeather.weather === "Clear") {
+      //   weatherIcon.addClass("fas fa-sun");
+      // } else if (storedLocal[i].currentWeather.weather === "Clouds") {
+      //   weatherIcon.addClass("fas fa-cloud");
+      // } else if (storedLocal[i].currentWeather.weather === "Rain") {
+      //   weatherIcon.addClass("fas fa-cloud-rain");
+      // } else if (
+      //   storedLocal[i].currentWeather.weather === "Smoke" ||
+      //   storedLocal[i].currentWeather.weather === "Haze" ||
+      //   storedLocal[i].currentWeather.weather === "Fog" ||
+      //   storedLocal[i].currentWeather.weather === "Mist"
+      // ) {
+      //   weatherIcon.addClass("fas fa-smog")
+      // } else if (storedLocal[i].currentWeather.weather === "Thunderstorm") {
+      //   weatherIcon.addClass("fas fa-bolt")
+      // }
 
       $("#city-date").append(weatherIcon);
 
@@ -135,11 +142,60 @@ function displayCityList() {
   }
 }
 
+function displayFutureWeather(city) {
+  var fiveDayEl = $("#five-day");
+  fiveDayEl.empty();
+  var storedLocal = JSON.parse(localStorage.getItem("weatherValues"));
+  for (var i = 0; i < storedLocal.length; i++) {
+    if (storedLocal[i].cityName.toLowerCase() === city.toLowerCase()) {
+      for (var c = 0; c < storedLocal[i].futureWeather.length; c++) {
+        // var futureIcon = storedLocal[i].futureWeather[c].weather;
+
+        var weatherBlock = $("<div>").addClass("weather-block");
+
+        var futureDate = $("<h4>").text(storedLocal[i].futureWeather[c].date);
+        var futureIcon = $("<i>");
+        var futureTemp = $("<h4>").text(
+          storedLocal[i].futureWeather[c].temperature
+        );
+        var futureHumid = $("<h4>").text(
+          storedLocal[i].futureWeather[c].humidity
+        );
+
+        displayWeatherIcon(futureIcon, storedLocal[i].futureWeather[c].weather)
+        
+        weatherBlock.append(futureDate, futureIcon, futureTemp, futureHumid);
+        fiveDayEl.append(weatherBlock);
+      }
+    }
+  }
+}
+
+function displayWeatherIcon(icon, weatherEvent) {
+  if (weatherEvent === "Clear") {
+    icon.addClass("fas fa-sun");
+  } else if (weatherEvent === "Clouds") {
+    icon.addClass("fas fa-cloud");
+  } else if (weatherEvent === "Rain") {
+    icon.addClass("fas fa-cloud-rain");
+  } else if (
+    weatherEvent === "Smoke" ||
+    weatherEvent === "Haze" ||
+    weatherEvent === "Fog" ||
+    weatherEvent === "Mist"
+  ) {
+    icon.addClass("fas fa-smog");
+  } else if (weatherEvent === "Thunderstorm") {
+    icon.addClass("fas fa-bolt");
+  }
+}
+
 $(document).ready(function () {
   displayCityList();
   var storedLocal = JSON.parse(localStorage.getItem("weatherValues"));
   if (storedLocal) {
     displayCurrentWeather(storedLocal[storedLocal.length - 1].cityName);
+    displayFutureWeather(storedLocal[storedLocal.length - 1].cityName);
   }
 
   $("#city-search").on("submit", function (event) {
@@ -155,5 +211,6 @@ $(document).ready(function () {
   $(".list-group").on("click", ".list-group-item", function () {
     var citySelection = $(this).text();
     displayCurrentWeather(citySelection);
+    displayFutureWeather(citySelection);
   });
 });
