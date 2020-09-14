@@ -200,3 +200,8 @@ $(document).ready(function () {
     displayFutureWeather(citySelection);
   });
 });
+
+$(document).ajaxError(function() {
+  alert("Enter a valid city name");
+  displayCityList();
+})
