@@ -3,66 +3,80 @@ var currentDate = moment().format("M/D/YY");
 var apiKey = "f2f448fdff7880f3d298bdf08e187544";
 
 function storeWeather(city) {
-  latLongURL =
-    "https://api.openweathermap.org/data/2.5/weather?q=" +
-    city +
-    "&appid=" +
-    apiKey;
-
-  requestLatLong = {
-    url: latLongURL,
-    method: "GET",
-  };
-
-  $.ajax(requestLatLong).then(function (responseOne) {
-    var currentCity = responseOne.name;
-    var lat = responseOne.coord.lat;
-    var long = responseOne.coord.lon;
-
-    weatherURL =
-      "https://api.openweathermap.org/data/2.5/onecall?lat=" +
-      lat +
-      "&lon=" +
-      long +
-      "&%20&exclude=minutely,hourly&units=imperial&appid=" +
+  var found = false;
+  var storedLocal = JSON.parse(localStorage.getItem("weatherValues"));
+  if (storedLocal) {
+    for (var i = 0; i < storedLocal.length; i++) {
+      if (city.toLowerCase() === storedLocal[i].cityName.toLowerCase()) {
+        found = true;
+      }
+    }
+  }
+  if (found) {
+    alert("City is already in dropdown menu");
+    displayCityList();
+  } else {
+    latLongURL =
+      "https://api.openweathermap.org/data/2.5/weather?q=" +
+      city +
+      "&appid=" +
       apiKey;
 
-    requestWeather = {
-      url: weatherURL,
+    requestLatLong = {
+      url: latLongURL,
       method: "GET",
     };
 
-    $.ajax(requestWeather).then(function (responseTwo) {
-      var weatherStats = {
-        cityName: currentCity,
-        currentWeather: {
-          date: moment().utc(responseTwo.current.dt).format("M/D/YY"),
-          weather: responseTwo.current.weather[0].main,
-          temperature: responseTwo.current.temp + " °F",
-          humidity: responseTwo.current.humidity + "%",
-          windSpeed: responseTwo.current.wind_speed + " MPH",
-          uvIndex: responseTwo.current.uvi,
-        },
-        futureWeather: [],
+    $.ajax(requestLatLong).then(function (responseOne) {
+      var currentCity = responseOne.name;
+      var lat = responseOne.coord.lat;
+      var long = responseOne.coord.lon;
+
+      weatherURL =
+        "https://api.openweathermap.org/data/2.5/onecall?lat=" +
+        lat +
+        "&lon=" +
+        long +
+        "&%20&exclude=minutely,hourly&units=imperial&appid=" +
+        apiKey;
+
+      requestWeather = {
+        url: weatherURL,
+        method: "GET",
       };
 
-      for (var i = 1; i < 6; i++) {
-        fiveDayForecast = {
-          date: moment.unix(responseTwo.daily[i].dt).format("M/D/YY"),
-          weather: responseTwo.daily[i].weather[0].main,
-          temperature: responseTwo.daily[i].temp.day + " °F",
-          humidity: responseTwo.daily[i].humidity + "%",
+      $.ajax(requestWeather).then(function (responseTwo) {
+        var weatherStats = {
+          cityName: currentCity,
+          currentWeather: {
+            date: moment().utc(responseTwo.current.dt).format("M/D/YY"),
+            weather: responseTwo.current.weather[0].main,
+            temperature: responseTwo.current.temp + " °F",
+            humidity: responseTwo.current.humidity + "%",
+            windSpeed: responseTwo.current.wind_speed + " MPH",
+            uvIndex: responseTwo.current.uvi,
+          },
+          futureWeather: [],
         };
 
-        weatherStats.futureWeather.push(fiveDayForecast);
-      }
+        for (var i = 1; i < 6; i++) {
+          fiveDayForecast = {
+            date: moment.unix(responseTwo.daily[i].dt).format("M/D/YY"),
+            weather: responseTwo.daily[i].weather[0].main,
+            temperature: responseTwo.daily[i].temp.day + " °F",
+            humidity: responseTwo.daily[i].humidity + "%",
+          };
 
-      addToStorage("weatherValues", weatherStats);
-      displayCityList();
-      displayCurrentWeather(city);
-      displayFutureWeather(city);
+          weatherStats.futureWeather.push(fiveDayForecast);
+        }
+
+        addToStorage("weatherValues", weatherStats);
+        displayCityList();
+        displayCurrentWeather(city);
+        displayFutureWeather(city);
+      });
     });
-  });
+  }
 }
 
 function addToStorage(key, value) {
@@ -201,7 +215,7 @@ $(document).ready(function () {
   });
 });
 
-$(document).ajaxError(function() {
+$(document).ajaxError(function () {
   alert("Enter a valid city name");
   displayCityList();
-})
+});
