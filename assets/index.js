@@ -142,7 +142,9 @@ function displayCityList() {
       }
     }
     localStorage.clear();
-    localStorage.setItem("weatherValues", JSON.stringify(newCityList));
+    if (newCityList.length > 0) {
+      localStorage.setItem("weatherValues", JSON.stringify(newCityList));
+    }
   }
 }
 
