@@ -3,6 +3,7 @@ var currentDate = moment().format("M/D/YY");
 var apiKey = "f2f448fdff7880f3d298bdf08e187544";
 
 function storeWeather(city) {
+  //prevents duplicate cities from being appended
   var found = false;
   var storedLocal = JSON.parse(localStorage.getItem("weatherValues"));
   if (storedLocal) {
@@ -27,6 +28,7 @@ function storeWeather(city) {
       method: "GET",
     };
 
+    // first api call to retrieve latitude/longitude
     $.ajax(requestLatLong).then(function (responseOne) {
       var currentCity = responseOne.name;
       var lat = responseOne.coord.lat;
@@ -45,6 +47,7 @@ function storeWeather(city) {
         method: "GET",
       };
 
+      // second api call to retrieve weather info
       $.ajax(requestWeather).then(function (responseTwo) {
         var weatherStats = {
           cityName: currentCity,
@@ -79,6 +82,7 @@ function storeWeather(city) {
   }
 }
 
+// checks for local storage key and adds value
 function addToStorage(key, value) {
   var storedLocal = JSON.parse(localStorage.getItem(key));
   if (storedLocal) {
@@ -91,6 +95,7 @@ function addToStorage(key, value) {
   }
 }
 
+// retrieves current weather values from local storage and displays on page
 function displayCurrentWeather(city) {
   var storedLocal = JSON.parse(localStorage.getItem("weatherValues"));
   for (var i = 0; i < storedLocal.length; i++) {
@@ -127,6 +132,7 @@ function displayCurrentWeather(city) {
   }
 }
 
+// displays available cities in dropdown menu. Removes cities from local Storage if previous date
 function displayCityList() {
   var storedLocal = JSON.parse(localStorage.getItem("weatherValues"));
   if (storedLocal) {
@@ -148,6 +154,7 @@ function displayCityList() {
   }
 }
 
+// retrieves future weather values from local storage and displays on page
 function displayFutureWeather(city) {
   var fiveDayEl = $("#five-day");
   fiveDayEl.empty();
@@ -175,6 +182,7 @@ function displayFutureWeather(city) {
   }
 }
 
+// changes fontawesome icon based on weather condition
 function displayWeatherIcon(icon, weatherEvent) {
   if (weatherEvent === "Clear") {
     icon.addClass("fas fa-sun");
@@ -197,6 +205,7 @@ function displayWeatherIcon(icon, weatherEvent) {
 }
 
 $(document).ready(function () {
+  // calling main page functions
   displayCityList();
   var storedLocal = JSON.parse(localStorage.getItem("weatherValues"));
   if (storedLocal) {
@@ -204,6 +213,7 @@ $(document).ready(function () {
     displayFutureWeather(storedLocal[storedLocal.length - 1].cityName);
   }
 
+  // sends api request based on user city input
   $("#city-search").on("submit", function (event) {
     event.preventDefault();
 
@@ -214,6 +224,7 @@ $(document).ready(function () {
     storeWeather(cityInput);
   });
 
+  // displays weather based on user selection of dropdown menu
   $(".list-group").on("click", ".list-group-item", function () {
     var citySelection = $(this).text();
     displayCurrentWeather(citySelection);
@@ -221,6 +232,7 @@ $(document).ready(function () {
   });
 });
 
+// alerts user is city is not found in the api call
 $(document).ajaxError(function () {
   alert("Enter a valid city name");
   displayCityList();
