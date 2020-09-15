@@ -131,14 +131,18 @@ function displayCityList() {
   var storedLocal = JSON.parse(localStorage.getItem("weatherValues"));
   if (storedLocal) {
     cityList.empty();
+    var newCityList = [];
     for (var i = 0; i < storedLocal.length; i++) {
       if (storedLocal[i].currentWeather.date === currentDate) {
+        newCityList.push(storedLocal[i]);
         var listEl = $("<li>")
           .addClass("list-group-item")
           .text(storedLocal[i].cityName);
         cityList.append(listEl);
       }
     }
+    localStorage.clear();
+    localStorage.setItem("weatherValues", JSON.stringify(newCityList));
   }
 }
 
