@@ -2,9 +2,9 @@
 
 I was tasked with creating a weather dashboard that generates dynamic content based on a user's city input. A user can search for any city in the search bar and the site will retrieve and display the current weather and a five day forecast for that city. 
 
-![Weather Dashboard](assets/images/WeatherDashboard.png)
+![Weather Dashboard](./assets/images/WeatherDashboard.png)
 
-The weather search was enabled by the [OpenWeather](https://openweathermap.org/api) Api. The first api call uses the [Current Weather Data](https://openweathermap.org/current) api which retrieves the latitude and longitude of the city. The geocoordinates are then used to make another api call through the [One Call API](https://openweathermap.org/api/one-call-api). The second api is where most of the weather data is taken from. 
+The weather search was enabled by the [OpenWeather](https://openweathermap.org/) APIs. The first API call uses the [Current Weather Data](https://openweathermap.org/current) API which retrieves the latitude and longitude of the city. The geocoordinates are then used to make another API call through the [One Call API](https://openweathermap.org/api/one-call-api). The second api is where most of the weather data is taken from. 
 
 Weather data is stored in local storage to ensure it persists on the page. The information retrieved for each city is stored in the following object notation: 
 ```
